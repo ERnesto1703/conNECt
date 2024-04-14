@@ -52,14 +52,34 @@
 
     // run the webcam image through the image model
     async function predict() {
-        // predict can take in an image, video or canvas html element
-        const prediction = await model.predict(webcam.canvas);
-        for (let i = 0; i < maxPredictions; i++) {
-            const classPrediction =
-                prediction[i].className + ": " + prediction[i].probability.toFixed(2);
-            labelContainer.childNodes[i].innerHTML = classPrediction;
+    // predict puede tomar una imagen, video o elemento canvas de HTML
+    const prediction = await model.predict(webcam.canvas);
+    
+    // Inicializa las variables para almacenar la clase más probable y su probabilidad
+    let maxProbability = -Infinity;
+    let predictedClass = "";
+
+    // Encuentra la clase con la probabilidad más alta
+    for (let i = 0; i < maxPredictions; i++) {
+        if (prediction[i].probability > maxProbability) {
+            maxProbability = prediction[i].probability;
+            predictedClass = prediction[i].className;
         }
     }
+
+    // Muestra la clase más probable en el contenedor de etiquetas
+    let classPrediction;
+    if (predictedClass === "Fruta podrida") {
+        classPrediction = "Fruta podrida";
+    } else if (predictedClass === "Fruta en buen estado") {
+        classPrediction = "Fruta en buen estado";
+    } else {
+        classPrediction = predictedClass; // Si no coincide, conserva la clase original
+    }
+    labelContainer.innerHTML = classPrediction;
+}
+
+
 </script>
 
     </body>
